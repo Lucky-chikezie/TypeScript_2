@@ -1,0 +1,94 @@
+interface TodoItem {
+    id: number;
+    task: string;
+    completed: boolean;
+    dueDate: Date;
+}
+
+
+class TodoList {
+    private todos: TodoItem[] = [];
+
+    public addTodo(task: string, dueDate: Date): void {
+        const newTodo: TodoItem = {
+            id: Date.now(),
+            task,
+            completed: false,
+            dueDate
+        };
+        this.todos.push(newTodo);
+    }
+
+    public completeTodo(id: number): void {
+        const todo = this.todos.find(t => t.id === id);
+        if (todo) {
+            todo.completed = true;
+        }
+    }
+
+    public removeTodo(id: number): void {
+        this.todos = this.todos.filter(t => t.id !== id);
+    }
+
+    public listTodos(): TodoItem[] {
+        return this.todos;
+    }
+
+    public filterByCompleted(status: boolean): TodoItem[] {
+        return this.todos.filter(t => t.completed === status);
+    }
+
+    public updateTask(id: number, newTask: string): void {
+        const todo = this.todos.find(t => t.id === id);
+        if (todo) {
+            todo.task = newTask;
+        }
+    }
+
+    public clearCompleted(): void {
+        this.todos = this.todos.filter(t => !t.completed);
+    }
+}
+
+
+
+
+// Create a new TodoList instance
+const myTodos = new TodoList();
+
+// Add tasks
+myTodos.addTodo("Read a new book", new Date("2026-06-01"));
+myTodos.addTodo("Gym training", new Date("2026-06-03"));
+myTodos.addTodo("Shopping", new Date("2026-06-05"));
+
+// Show all tasks
+console.log("All Todos:");
+myTodos.listTodos().forEach(todo => {
+    console.log(`- Task: ${todo.task} | Due: ${todo.dueDate.toDateString()} | Completed: ${todo.completed}`);
+});
+
+// Complete the first task
+const firstTodoId = myTodos.listTodos()[0].id;
+myTodos.completeTodo(firstTodoId);
+
+// Update the first task
+myTodos.updateTask(firstTodoId, "Finish reading the book");
+
+// Show completed tasks
+console.log("\nCompleted Todos:");
+myTodos.filterByCompleted(true).forEach(todo => {
+    console.log(`- Task: ${todo.task} | Due: ${todo.dueDate.toDateString()} | Completed: ${todo.completed}`);
+});
+
+// Remove the second task
+const secondTodoId = myTodos.listTodos()[1].id;
+myTodos.removeTodo(secondTodoId);
+
+// Clear all completed tasks
+myTodos.clearCompleted();
+
+// Final list of tasks
+console.log("\nRemaining Todos:");
+myTodos.listTodos().forEach(todo => {
+    console.log(`- Task: ${todo.task} | Due: ${todo.dueDate.toDateString()} | Completed: ${todo.completed}`);
+});
